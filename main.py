@@ -14,34 +14,51 @@ def welcome():
 def filter_data():
     request_data = request.get_json()
 
-    select = [None]*9
-    filter = [None]*9
-    groupby = [None]*9
-    sort = [None]*9
+    select_query = ''
+    filter_query = ''
+    groupby_query = ''
+    sort_query = ''
 
     if request_data:
-        if 'select' in request_data:
-            select_received = request_data['select']
-            if 'date' in select_received:
-                select[0] = select_received['date']
-            if 'chanel' in select_received:
-                select[1] = select_received['chanel']
-            if 'country' in select_received:
-                select[2] = select_received['country']
-            if 'os' in select_received:
-                select[3] = select_received['os']
-            if 'impressions' in select_received:
-                select[4] = select_received['impressions']
-            if 'clicks' in select_received:
-                select[5] = select_received['clicks']
-            if 'installs' in select_received:
-                select[6] = select_received['installs']
-            if 'spend' in select_received:
-                select[7] = select_received['spend']
-            if 'revenue' in select_received:
-                select[8] = select_received['revenue']
+        if 'select' in request_data and len(request_data['select']) != 0:
+            select_query = 'SELECT '
+            for column in request_data['select']:
+                select_query += column + ', '
 
-    return ''.join(str(select))
+            # remove the last ', '
+            select_query = select_query[:-2]
+
+        if 'filter' in request_data and len(request_data['filter']) != 0:
+            filter_query = 'WHERE '
+            # json array with all the filter parameters
+            filter_received = request_data['filter']
+            # adding all the filters to the query
+            if 'date_from' in filter_received:
+                filter_query += 'date > ' + filter_received['date_from'] + ' AND '
+            if 'date_to' in filter_received:
+                filter_query += 'date < ' + filter_received['date_from'] + ' AND '
+            if 'country' in filter_received:
+                filter_query += 'country is ' + filter_received['date_from'] + ' AND '
+            if 'os' in filter_received:
+                filter_query += 'os is ' + filter_received['date_from'] + ' AND '
+
+            # remove the last 'AND '
+            groupby_query = filter_query[:-4]
+
+        if 'groupby' in request_data and len(request_data['groupby']) != 0:
+            groupby_query = 'GROUP BY '
+            for column in request_data['groupby']:
+                select_query += column + ', '
+
+            # remove the last ', '
+            groupby_query = select_query[:-2]
+
+        if 'sort' in request_data and len(request_data['sort']) == 2:
+            sort_query = 'ORDER BY ' + request_data['sort']['column']
+            if request_data['sort']['asc'] == "false":
+                sort_query += ' DESC'
+
+    return ''.join(str(sort_query))
 
 
 if __name__ == '__main__':
