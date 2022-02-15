@@ -1,3 +1,5 @@
+# File containing showcase requests to the API in JSON format
+
 request1 = {
     "select": ["channel", "country", "impressions", "clicks"],
     "filter": {

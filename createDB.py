@@ -1,3 +1,6 @@
+# File that creates local SQL DB from the local csv table with data
+# Executed once to create DB
+
 import sqlite3 as sl
 import pandas as pd
 
