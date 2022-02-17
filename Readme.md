@@ -1,4 +1,4 @@
-Python(Flask) HTTP API. Test task for Adjust.
+Python(Flask) HTTP API.
 
 This API (main.py) is taking the data from the sample database and capable of filtering, grouping and sorting it.
 
